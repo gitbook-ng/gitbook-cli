@@ -31,7 +31,7 @@ describe('Versions', function() {
         var result;
 
         before(function() {
-            return manager.install('2.0.0')
+            return manager.install('3.2.4')
             .then(function(version) {
                 result = version;
             });
@@ -39,7 +39,7 @@ describe('Versions', function() {
 
         it('should correctly return the installed version', function() {
             result.should.be.a.String();
-            result.should.equal('2.0.0');
+            result.should.equal('3.2.4');
         });
     });
 
@@ -48,7 +48,7 @@ describe('Versions', function() {
             return manager.ensure(__dirname)
             .then(function(v) {
                 v.should.have.properties('version', 'path');
-                v.version.should.equal('2.0.0');
+                v.version.should.equal('3.2.4');
             });
         });
 
@@ -56,7 +56,7 @@ describe('Versions', function() {
             return manager.ensure(path.resolve(__dirname, 'fixtures/book1'))
             .then(function(v) {
                 v.should.have.properties('version', 'path');
-                v.version.should.equal('3.0.0-pre.2');
+                v.version.should.equal('3.2.4');
             });
         });
     });
@@ -70,16 +70,14 @@ describe('Versions', function() {
 
         it('should correctly return the installed version', function() {
             result.should.be.an.Array();
-            result.should.have.lengthOf(2);
+            result.should.have.lengthOf(1);
             result[0].should.have.properties('name', 'tag', 'version', 'path');
-            result[0].version.should.equal('3.0.0-pre.2');
-            result[1].should.have.properties('name', 'tag', 'version', 'path');
-            result[1].version.should.equal('2.0.0');
+            result[0].version.should.equal('3.2.4');
         });
     });
 
     describe('.link()', function() {
-        var localGitbook = path.resolve(__dirname, '../node_modules/gitbook');
+        var localGitbook = path.resolve(__dirname, '../node_modules/@gitbook-ng/gitbook');
 
         before(function() {
             return manager.link('latest', localGitbook);
@@ -87,9 +85,9 @@ describe('Versions', function() {
 
         it('should correctly list latest version', function() {
             var result = manager.versions();
-            result.should.have.lengthOf(3);
+            result.should.have.lengthOf(2);
             result[1].should.have.properties('version', 'path');
-            result[1].tag.should.equal('beta');
+            result[1].tag.should.equal('latest');
             result[1].name.should.equal('latest');
             result[1].link.should.equal(localGitbook);
         });
@@ -97,7 +95,7 @@ describe('Versions', function() {
         it('should correctly return latest version as default one', function() {
             return manager.get(__dirname)
             .then(function(version) {
-                version.name.should.equal('latest');
+                version.name.should.equal('3.2.4');
             });
         });
     });
@@ -115,10 +113,10 @@ describe('Versions', function() {
 
     describe('.uninstall()', function() {
         it('should correctly remove a specific version', function() {
-            return manager.uninstall('2.0.0')
+            return manager.uninstall('3.2.4')
             .then(function() {
                 var result = manager.versions();
-                result.should.have.lengthOf(2);
+                result.should.have.lengthOf(1);
             });
         });
 
@@ -126,7 +124,7 @@ describe('Versions', function() {
             return manager.uninstall('latest')
             .then(function() {
                 var result = manager.versions();
-                result.should.have.lengthOf(1);
+                result.should.have.lengthOf(0);
             });
         });
     });
